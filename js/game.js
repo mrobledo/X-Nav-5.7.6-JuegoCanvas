@@ -156,6 +156,7 @@ var update = function (modifier) {
 
 var touchStone = function (person){
 	var i;
+	var touch = false;
 	for (i = 0; i < cont; i++){
 		if (
 		person.x <= (stones[i].x + 16)
@@ -163,11 +164,10 @@ var touchStone = function (person){
 		&& person.y <= (stones[i].y + 16)
 		&& stones[i].y <= (person.y + 32)
 	) {
-		return true;
-	}else
-		return false;
+		touch = true;
 	}
-
+	}
+	return touch;
 }
 
 // Draw everything
