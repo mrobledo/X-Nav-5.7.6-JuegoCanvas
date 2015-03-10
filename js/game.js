@@ -33,6 +33,7 @@ monsterImage.onload = function () {
 };
 monsterImage.src = "images/monster.png";
 
+
 // Hero image
 var heroReady = false;
 var heroImage = new Image();
@@ -60,6 +61,7 @@ var princess = {};
 var stones = [5];
 var cont  = 0;
 var princessesCaught = 0;
+var position = [{x:32,y:32},{x:448,y:32},{x:32,y:416},{x:448,y:416}];
 
 // Handle keyboard controls
 var keysDown = {};
@@ -82,32 +84,33 @@ var reset = function () {
 	do{
 		princess.x = 32 + (Math.random() * (canvas.width - 96));
 		princess.y = 32 + (Math.random() * (canvas.height - 96));
-	}while(touchStone(princess));
+	}while(touchStone(princess.x, princess.y));
 	
 	// Throw the monster somewhere on the screen randomly
-	monster.x = 32;
-	monster.y = 32;
+		monster.x = position[Math.floor(Math.random() * 4)].x;
+		monster.y = position[Math.floor(Math.random() * 4)].y;
+
 };
 
 // Update game objects
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
-		if (((hero.y -(hero.speed * modifier)) > 32) && !touchStone(hero)){
+		if (((hero.y -(hero.speed * modifier)) > 32) && !touchStone(hero.x,(hero.y -(hero.speed * modifier)))){
 			hero.y -= hero.speed * modifier;
 		}
 	}
 	if (40 in keysDown) { // Player holding down
-		if (((hero.y +(hero.speed * modifier)) < 416) && !touchStone(hero)){
+		if (((hero.y +(hero.speed * modifier)) < 416) && !touchStone(hero.x,(hero.y +(hero.speed * modifier)))){
 			hero.y += hero.speed * modifier;
 		}
 	}
 	if (37 in keysDown) { // Player holding left
-		if (((hero.x -(hero.speed * modifier)) > 32) && !touchStone(hero)){
+		if (((hero.x -(hero.speed * modifier)) > 32) && !touchStone((hero.x -(hero.speed * modifier)),hero.y)){
 			hero.x -= hero.speed * modifier;
 		}
 	}
 	if (39 in keysDown) { // Player holding right
-		if (((hero.x +(hero.speed * modifier)) < 448) && !touchStone(hero)){
+		if (((hero.x +(hero.speed * modifier)) < 448) && !touchStone((hero.x +(hero.speed * modifier)),hero.y)){
 			hero.x += hero.speed * modifier;
 		}
 	}
@@ -154,15 +157,15 @@ var update = function (modifier) {
 	}
 };
 
-var touchStone = function (person){
+var touchStone = function (px, py){
 	var i;
 	var touch = false;
 	for (i = 0; i < cont; i++){
 		if (
-		person.x <= (stones[i].x + 16)
-		&& stones[i].x <= (person.x + 16)
-		&& person.y <= (stones[i].y + 16)
-		&& stones[i].y <= (person.y + 32)
+		px <= (stones[i].x + 16)
+		&& stones[i].x <= (px + 16)
+		&& py <= (stones[i].y + 16)
+		&& stones[i].y <= (py + 32)
 	) {
 		touch = true;
 	}
